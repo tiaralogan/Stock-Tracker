@@ -1,0 +1,34 @@
+<!-- Make the container the entire length of the screen -->
+
+<div class="stock">
+  <p>Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)</p>
+  <input #stock />
+  <button type="button" (click)="stockSearchFunc(stock.value)" (click)="stock.value=''">SEARCH</button>
+  {{ noSymbol }}
+    <!--<ul>
+    <li *ngFor="let stock of stocks">{{ stock | uppercase }}</li>
+  </ul>
+
+<p>hello {{ symbol }} {{ info['quote'] | json }} {{ quote }}</p>-->
+
+  <!-- <p>Current Price {{ currentPrice }}</p>
+  <p>Percent change {{ percentChange }}</p>
+  <p>Opening price {{ openingPrice }}</p>
+  <p>High Price {{ highPrice }}</p>
+
+  {{ company['ticker'] | json }}-->
+</div>
+
+
+  <div *ngFor="let stock of stocks; let i = index" [attr.data-index]="i">
+    <!--<app-individual-stock [quote]="quote"></app-individual-stock>-->
+    <app-individual-stock
+      [quoteInfo]="quoteInfo[i]"
+      [companies]="companies[i]"
+      (removeSymbol)="deleteSymbol($event)"
+      (removeSymbolInfo)="deleteSymbolInfo($event)"
+    ></app-individual-stock>
+  </div>
+
+
+<router-outlet></router-outlet>
