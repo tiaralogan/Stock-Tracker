@@ -10,100 +10,48 @@ import {Location} from '@angular/common';
 })
 export class SentimentComponent implements OnInit {
 
-
-
-
   ticker: string;
   name: string;
   information: any = [];
   lastThree: any = [];
   sentiment: boolean = false;
   
-  constructor(    private route: ActivatedRoute, private stockSearch: StockSearchService, private location: Location ) {
+  constructor(private route: ActivatedRoute, private stockSearch: StockSearchService, private location: Location ) {}
 
-  }
-
+  // Takes in the query parameters when the page is loaded and asigns them to variables
+  // Fixes the page navigation so that the url does not show the query paramenter
+  // Calls a function that will get api data needed for the page
   ngOnInit() {
-
-
- 
-
    this.route.queryParams.subscribe(
     params => {
       this.ticker =  params['ticker'];
       this.name = params['name'];
     });
-
     this.location.replaceState('sentiment/'+this.ticker);
-
     this.getSentimentData(this.ticker);
-    //console.log(this.information);
-
- 
-    
-  
-
   }
 
-
+  // Call the function that does the api call
+  // Gets the data from the api call
   getSentimentData(stock: string) {
-    //   this.company = {};
-    //  this.symbol = '';
     this.stockSearch
       .getSentiment(stock)
-      //.pipe(takeWhile(() => this.alive))
       .subscribe({
         next: (data: String) => {
           this.information = data;
-          
-
           this.getLastThree();
-
-        
-        
         },
         error: (err) => {
           console.log(err);
         },
       });
-
-
-
-  
-  
-   
-
   }
 
-
-
-
+  // Get only the last three peices of data, the three most recent months, if any
   getLastThree () {
-
-
-
-
-
     for (var x = 1; x < 4; x++) {
-
-
-      
-
-
-      this.lastThree.unshift(this.information['data'][this.information['data'].length - x]);
-
- 
-   
-
-  }
-
-
-
-
-
-
-
-
+      this.lastThree.unshift(this.information['data'][this.information['data'].length - x]); 
+    }
   }
 
 

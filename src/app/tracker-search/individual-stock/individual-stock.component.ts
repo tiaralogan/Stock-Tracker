@@ -7,7 +7,6 @@ import {
   EventEmitter,
 } from '@angular/core';
 
-import { Router } from '@angular/router';
 import { StockSearchService } from '../../stock-search.service';
 
 @Component({
@@ -15,16 +14,15 @@ import { StockSearchService } from '../../stock-search.service';
   templateUrl: './individual-stock.component.html',
   styleUrls: ['./individual-stock.component.css'],
 })
+
 export class IndividualStockComponent implements OnInit {
-  quote: any;
-  @Input() quoteInfo: any;
+
   @Input() companies: any;
 
   @Output() removeSymbol = new EventEmitter<string>();
   @Output() removeSymbolInfo = new EventEmitter<string>();
 
-  quoteHighPrice: number;
-
+  quote: any;
   name: string;
   ticker: string;
   highPrice: number;
@@ -32,78 +30,41 @@ export class IndividualStockComponent implements OnInit {
   currentPrice: number;
   percentChange: number;
 
-  arrow: boolean;
+  constructor(private stockSearch: StockSearchService,) {}
 
-  constructor(   private stockSearch: StockSearchService,) {}
-
+  // Send the information to send back to tracker search component that needs to be deleted
   deleteSymbol() {
     this.removeSymbol.emit(this.companies);
   }
 
-  deleteInfo() {
-    this.removeSymbolInfo.emit(this.quoteInfo);
-  }
-
   ngOnInit() {
+    // Call the function to get the stocks quote
     this.showQuote(this.ticker);
   }
 
+  // Detects modifications of input properties
   ngOnChanges(changes: SimpleChanges) {
-    if (this.quoteInfo) {
-    //  this.quoteHighPrice = this.quoteInfo['h'];
-    //  this.openingPrice = this.quoteInfo['o'];
-    //  this.currentPrice = this.quoteInfo['c'];
-    //  this.percentChange = this.quoteInfo['dp'];
-
-  
-    }
-
-
-
-
-    if (this.percentChange < 0) {
-      this.arrow = false;
-    } else {
-      this.arrow = true;
-    }
-
-
-
     if (this.companies) {
       this.name = this.companies['name'];
       this.ticker = this.companies['ticker'];
     }
   }
 
-
-
+  // Call the function that does the api call
+  // Gets the data from the api call
   showQuote(symbol: string) {
-   // this.quote = null;
     this.stockSearch
       .getQuote(symbol)
       .subscribe({
         next: (data: String) => {
-         // this.currentQuote['quote'] = data;
           this.quote = data;
-
           this.currentPrice = this.quote['c'];
-          
           this.percentChange = this.quote['dp'];
           this.openingPrice = this.quote['o'];
           this.highPrice = this.quote['h'];
-
-
-
-          console.log(this.highPrice);
-          //this.quoteInfo.unshift(this.currentQuote['quote']);
-
         },
         error: (err) => console.log('Error Happened quote'),
       });
   }
 
-
-  deleteStock() {}
-
-  moreInfo(name: string) {}
 }

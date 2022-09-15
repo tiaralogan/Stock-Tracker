@@ -1,5 +1,5 @@
 <!--
-  This is where you enter the stock. It has an input button that triggers a function. It also clears the input when clicked for new information. There is a variable that allows shows the user if there is a problem (two different options for this). 
+  This is where you enter the stock. It has an input button that triggers a function. It also clears the input when clicked for new information. There is a variable that allows shows the user if there is a problem (a few options). 
 -->
 
 <div class="stock">
@@ -16,26 +16,16 @@
   {{ noSymbol }}
 </div>
 
-
 <!--
-  This runs the app individual stock component for every index in the array stocks. Stocks holds the list for all current stocks in the local storage. There are also two other arrays that hold the data for each stock. They are at the same index
+  This runs the app individual stock component for every index in the array stocks. Stocks holds the list for all current stocks in the local storage. There are also an array that holds general information for each stock so that the name shows for the stock. The passed in input removes the stock from the current list of stocks.
 -->
 
 <div *ngFor="let stock of stocks; let i = index" [attr.data-index]="i">
-
-
-
-  
   <app-individual-stock
-   
     [companies]="companies[i]"
     (removeSymbol)="deleteSymbol($event)"
-    (removeSymbolInfo)="deleteSymbolInfo($event)"
   ></app-individual-stock>
 </div>
 
+<!-- insert the component matched by routes to be displayed on the screen-->
 <router-outlet></router-outlet>
-
-
-
-<!-- [quoteInfo]="quoteInfo[i]"-->
