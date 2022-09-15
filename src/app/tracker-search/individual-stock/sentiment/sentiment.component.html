@@ -1,28 +1,39 @@
-<!--{{information | json}}-->
-
+<!--
+  Show the name and the ticker of the stock that is being looked into
+-->
 <p>{{ name }} ({{ ticker }})</p>
 
+<!--
+  Goes through the variables in the lastThree array and shows data
+  Will change the month number to a word so that it is easier to read for the user
+  Shows positive/negative arrow if percent change is positive/negative
+-->
+<div
+  *ngFor="let last of lastThree; let i = index"
+  [attr.data-index]="i"
+  style="background-color: lightgray"
+>
+  <p *ngIf="last['month'] == 1">JANUARY</p>
+  <p *ngIf="last['month'] == 2">FEBRUARY</p>
+  <p *ngIf="last['month'] == 3">MARCH</p>
+  <p *ngIf="last['month'] == 4">APRIL</p>
+  <p *ngIf="last['month'] == 5">MAY</p>
+  <p *ngIf="last['month'] == 6">JUNE</p>
+  <p *ngIf="last['month'] == 7">JULY</p>
+  <p *ngIf="last['month'] == 8">AUGUST</p>
+  <p *ngIf="last['month'] == 9">SEPTEMBER</p>
+  <p *ngIf="last['month'] == 10">OCTOBER</p>
+  <p *ngIf="last['month'] == 11">NOVEMBER</p>
+  <p *ngIf="last['month'] == 12">DECEMBER</p>
 
-  <div *ngFor="let last of lastThree; let i = index" [attr.data-index]="i" style="background-color: lightgray"> 
-    <p *ngIf="last['month'] == 1">JANUARY</p>
-    <p *ngIf="last['month'] == 2">FEBRUARY</p>
-    <p *ngIf="last['month'] == 3">MARCH</p>
-    <p *ngIf="last['month'] == 4">APRIL</p>
-    <p *ngIf="last['month'] == 5">MAY</p>
-    <p *ngIf="last['month'] == 6">JUNE</p>
-    <p *ngIf="last['month'] == 7">JULY</p>
-    <p *ngIf="last['month'] == 8">AUGUST</p>
-    <p *ngIf="last['month'] == 9">SEPTEMBER</p>
-    <p *ngIf="last['month'] == 10">OCTOBER</p>
-    <p *ngIf="last['month'] == 11">NOVEMBER</p>
-    <p *ngIf="last['month'] == 12">DECEMBER</p>
+  <p>Change: {{ last['change'] }}</p>
+  <p>MSPR: {{ last['mspr'] }}</p>
 
-    <p>Change: {{ last['change'] }}</p>
-    <p>MSPR: {{ last['mspr'] }}</p>
-      
-    <p *ngIf="last['change'] < 0" style="color:red">&#8595;</p>
-    <p *ngIf="last['change'] >= true" style="color:green">&#8593;</p>
-  </div>
+  <p *ngIf="last['change'] < 0" style="color:red">&#8595;</p>
+  <p *ngIf="last['change'] >= true" style="color:green">&#8593;</p>
+</div>
 
-
+<!--
+  Router button that will take the users back to the tracker search component to see searched stock list
+-->
 <button routerLink="">Back to list of stocks</button>

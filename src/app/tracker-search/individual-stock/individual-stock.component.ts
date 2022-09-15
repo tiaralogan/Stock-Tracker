@@ -7,23 +7,22 @@ import {
   EventEmitter,
 } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { StockSearchService } from '../../stock-search.service';
 
 @Component({
   selector: 'app-individual-stock',
   templateUrl: './individual-stock.component.html',
   styleUrls: ['./individual-stock.component.css'],
 })
+
 export class IndividualStockComponent implements OnInit {
-  quote: any;
-  @Input() quoteInfo: any;
+
   @Input() companies: any;
 
   @Output() removeSymbol = new EventEmitter<string>();
   @Output() removeSymbolInfo = new EventEmitter<string>();
 
-  quoteHighPrice: number;
-
+  quote: any;
   name: string;
   ticker: string;
   highPrice: number;
@@ -31,41 +30,41 @@ export class IndividualStockComponent implements OnInit {
   currentPrice: number;
   percentChange: number;
 
-  arrow: boolean;
+  constructor(private stockSearch: StockSearchService,) {}
 
-  constructor() {}
-
+  // Send the information to send back to tracker search component that needs to be deleted
   deleteSymbol() {
     this.removeSymbol.emit(this.companies);
   }
 
-  deleteInfo() {
-    this.removeSymbolInfo.emit(this.quoteInfo);
+  ngOnInit() {
+    // Call the function to get the stocks quote
+    this.showQuote(this.ticker);
   }
 
-  ngOnInit() {}
-
+  // Detects modifications of input properties
   ngOnChanges(changes: SimpleChanges) {
-    if (this.quoteInfo) {
-      this.quoteHighPrice = this.quoteInfo['h'];
-      this.openingPrice = this.quoteInfo['o'];
-      this.currentPrice = this.quoteInfo['c'];
-      this.percentChange = this.quoteInfo['dp'];
-
-      if (this.percentChange < 0) {
-        this.arrow = false;
-      } else {
-        this.arrow = true;
-      }
-    }
-
     if (this.companies) {
       this.name = this.companies['name'];
       this.ticker = this.companies['ticker'];
     }
   }
 
-  deleteStock() {}
+  // Call the function that does the api call
+  // Gets the data from the api call
+  showQuote(symbol: string) {
+    this.stockSearch
+      .getQuote(symbol)
+      .subscribe({
+        next: (data: String) => {
+          this.quote = data;
+          this.currentPrice = this.quote['c'];
+          this.percentChange = this.quote['dp'];
+          this.openingPrice = this.quote['o'];
+          this.highPrice = this.quote['h'];
+        },
+        error: (err) => console.log('Error Happened quote'),
+      });
+  }
 
-  moreInfo(name: string) {}
 }

@@ -1,154 +1,85 @@
 import { Component, OnInit } from '@angular/core';
-import { takeWhile } from 'rxjs/operators';
 import { StockSearchService } from '../stock-search.service';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-tracker-search',
   templateUrl: './tracker-search.component.html',
   styleUrls: ['./tracker-search.component.css'],
 })
+
 export class TrackerSearchComponent implements OnInit {
-  constructor(
-    private stockSearch: StockSearchService,
-    private http: HttpClient
-  ) {}
+  constructor(private stockSearch: StockSearchService) {}
 
   company = {};
   symbol: any = '';
   noSymbol: string = '';
-
-  currentQuote = {};
-  quoteInfo: any = [];
   companies: any = [];
-  highPrice: number;
-  openingPrice: number;
-  currentPrice: number;
-  percentChange: number;
-  quote: any;
-
-  alive: boolean = true;
-
-  stockInfo = [];
-
-  ngOnInit() {
-    //this.showQuote();
-    //console.log('hello');
-    //localStorage.clear();
-
-    for (var i = 0; i < localStorage.length; i++) {
-     // if (localStorage.key(i).length < 7) {
-        //this.stocks.unshift(localStorage.key(i));
-        
-        this.findSymbol(localStorage.key(i));
-     // }
-    }
-  }
-
   stocks: string[] = [];
 
-  stockSearchFunc(stock: string) {
-    // if it is in the api
-    // if they it is not already in the array
-    stock.toUpperCase();
+  ngOnInit() {
+    // Clear any information that is currently in these 
+    this.companies = [];
+    this.stocks = [];
 
-    // push it to the array
-
-    const found = this.stocks.find((obj) => {
-      return obj == stock;
-    });
-
-    if (found !== undefined) {
-      console.log('Stock not found');
-    } else {
-      this.findSymbol(stock);
+    // Reads in information from local storage and searches to see if stock exists
+    for (var i = localStorage.length + 1; i >= 0; i--) {
+        this.findSymbol(localStorage.key(i));
     }
 
-
-
+    // Clears any messages when the page is created
+    this.noSymbol = '';
   }
 
+  stockSearchFunc(stock: string) {
+    // Change what ever was inputed into uppercase. Uppercase tickers/stocks will be used for the entire program
+    stock.toUpperCase();
+
+    // Tells us if the searched stock is in the array of stocks that are already being looked at
+    // Uses the find function to do the searching
+    const found = this.stocks.find((obj) => {
+      return obj == stock.toUpperCase();
+    });
+
+    // Looking to see if the stock was found or not in the function above
+    // If found there will be a message
+    // If not found, look for the symbol with the api
+    // If not in the api, there will be another message
+    if (found !== undefined) {
+      this.noSymbol = 'STOCK ALREADY SEARCHED';
+    } else {
+      this.noSymbol = "";
+      this.findSymbol(stock.toUpperCase());
+      if (this.symbol == undefined) {
+        this.noSymbol = 'PLEASE ENTER CORRECT STOCK SYMBOL';
+      } 
+    }
+  }
+
+  // Sees if the stock parameter is in the stocks array.
   find(stock: string) {
     for (var x = 0; x < this.stocks.length; x++) {
       if (this.stocks[x] == stock) {
-        console.log(this.stocks[x]);
-        console.log(stock);
         break;
       }
     }
-    this.stocks.unshift(stock);
   }
 
-  displayStocks(stock: string) {
-    this.clear();
-    this.showQuote(stock);
-  }
-
-  clear() {
-    this.company = {};
-    this.symbol = '';
-    this.noSymbol = '';
-
-    this.currentQuote = {};
-    this.highPrice = 0;
-    this.openingPrice = 0;
-    this.currentPrice = 0;
-    this.percentChange = 0;
-    this.quote = null;
-  }
-
-  showQuote(symbol: string) {
-    this.quote = null;
-    this.stockSearch
-      .getQuote(this.symbol)
-      //.pipe(takeWhile(() => this.alive))
-      .subscribe({
-        next: (data: String) => {
-          this.currentQuote['quote'] = data;
-          this.quote = data;
-
-          this.currentPrice = this.quote['c'];
-          this.percentChange = this.quote['dp'];
-          this.openingPrice = this.quote['o'];
-          this.highPrice = this.quote['h'];
-
-          this.quoteInfo.unshift(this.currentQuote['quote']);
-
-          console.log(this.quoteInfo);
-          console.log(this.quote['c']);
-        },
-        error: (err) => console.log('Error Happened quote'),
-      });
-  }
-
+  // Call the function that does the api call
+  // Gets the data from the api call
+  // Push the information retrieved into variables and local storage if found in api
   findSymbol(stock: string) {
-    //   this.company = {};
-    //  this.symbol = '';
     this.stockSearch
       .findSymbol(stock)
-      //.pipe(takeWhile(() => this.alive))
       .subscribe({
         next: (data: String) => {
           this.company = data;
           this.symbol = this.company['ticker'];
-
-          console.log(this.symbol);
-          console.log(this.company);
-
-          // only do this if it is not empty
           if (this.symbol !== undefined) {
             this.companies.unshift(this.company);
-            this.stocks.unshift(stock);
-            this.showQuote(this.symbol);
+            this.stocks.unshift(this.symbol);
             this.noSymbol = '';
-
             localStorage.setItem(stock, stock);
-            console.log('localStorage');
-            console.log(localStorage.getItem(stock));
-          } else {
-            this.noSymbol = 'PLEASE ENTER CORRECT STOCK SYMBOL';
-          }
+          } 
         },
         error: (err) => {
           console.log(err);
@@ -156,28 +87,17 @@ export class TrackerSearchComponent implements OnInit {
       });
   }
 
+  // Delete the stock from the stocks list 
+  // Remove the information from the stock company list
+  // Also remove the stock from the local storage
   deleteSymbol(removeSymbol: string) {
-    // remove symbol from list
-    console.log(removeSymbol['ticker']);
-
-    localStorage.removeItem(removeSymbol['ticker'].toLowerCase());
-
+    localStorage.removeItem(removeSymbol['ticker'].toUpperCase());
     for (var x = 0; x < this.companies.length; x++) {
       if (this.companies[x] == removeSymbol) {
         this.companies.splice(x, 1);
         this.stocks.splice(x, 1);
-
-        // delete in storage as well
       }
     }
   }
 
-  deleteSymbolInfo(removeSymbolInfo: string) {
-    // remove symbol info from list
-    for (var x = 0; x < this.quoteInfo.length; x++) {
-      if (this.quoteInfo[x] == removeSymbolInfo) {
-        this.quoteInfo.splice(x, 1);
-      }
-    }
-  }
 }

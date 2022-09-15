@@ -1,34 +1,31 @@
-<!-- Make the container the entire length of the screen -->
+<!--
+  This is where you enter the stock. It has an input button that triggers a function. It also clears the input when clicked for new information. There is a variable that allows shows the user if there is a problem (a few options). 
+-->
 
 <div class="stock">
   <p>Enter the symbol of a stock to track (i.e. AAPL, TSLA, GOOGL)</p>
-  <input #stock />
-  <button type="button" (click)="stockSearchFunc(stock.value)" (click)="stock.value=''">SEARCH</button>
+  <input #stock id="stockInput" />
+  <button
+    type="button"
+    (click)="stockSearchFunc(stock.value)"
+    (click)="stock.value = ''"
+    id="trackBtn"
+  >
+    TRACK STOCK
+  </button>
   {{ noSymbol }}
-    <!--<ul>
-    <li *ngFor="let stock of stocks">{{ stock | uppercase }}</li>
-  </ul>
-
-<p>hello {{ symbol }} {{ info['quote'] | json }} {{ quote }}</p>-->
-
-  <!-- <p>Current Price {{ currentPrice }}</p>
-  <p>Percent change {{ percentChange }}</p>
-  <p>Opening price {{ openingPrice }}</p>
-  <p>High Price {{ highPrice }}</p>
-
-  {{ company['ticker'] | json }}-->
 </div>
 
+<!--
+  This runs the app individual stock component for every index in the array stocks. Stocks holds the list for all current stocks in the local storage. There are also an array that holds general information for each stock so that the name shows for the stock. The passed in input removes the stock from the current list of stocks.
+-->
 
-  <div *ngFor="let stock of stocks; let i = index" [attr.data-index]="i">
-    <!--<app-individual-stock [quote]="quote"></app-individual-stock>-->
-    <app-individual-stock
-      [quoteInfo]="quoteInfo[i]"
-      [companies]="companies[i]"
-      (removeSymbol)="deleteSymbol($event)"
-      (removeSymbolInfo)="deleteSymbolInfo($event)"
-    ></app-individual-stock>
-  </div>
+<div *ngFor="let stock of stocks; let i = index" [attr.data-index]="i">
+  <app-individual-stock
+    [companies]="companies[i]"
+    (removeSymbol)="deleteSymbol($event)"
+  ></app-individual-stock>
+</div>
 
-
+<!-- insert the component matched by routes to be displayed on the screen-->
 <router-outlet></router-outlet>
