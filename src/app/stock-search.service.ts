@@ -75,7 +75,7 @@ this.threeMonthsPrior = (this.date.getFullYear() + '-' +
       this.configUrl +
 
 
-      '/stock/insider-sentiment?symbol='+symbol+'&from=2021-01-12&to='+ this.currentDate+
+      '/stock/insider-sentiment?symbol='+symbol+'&from=2015-01-12&to='+ this.currentDate+
 
        // '/stock/insider-sentiment?symbol='+ symbol.toUpperCase() + '&from=' +
        // this.threeMonthsPrior +

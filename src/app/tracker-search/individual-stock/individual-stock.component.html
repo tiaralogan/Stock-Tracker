@@ -1,17 +1,16 @@
 <div style="background-color: lightgray">
   <p>{{ name }}</p>
-  <p>High Price {{ quoteHighPrice }} &emsp; hello</p>
+  <p>High Price {{ highPrice }} &emsp;</p>
   <p>Opening Price {{ openingPrice }}</p>
   <p>Current Price {{ currentPrice }}</p>
   <p>Percent Change {{ percentChange }}</p>
 
   <!--<p>TURN THIS INTO ACTUAL COLORED ARROW: {{ arrow }}</p>-->
 
+  <p *ngIf="percentChange < 0" style="color:red">&#8595;</p>
+  <p *ngIf="percentChange >= 0" style="color:green">&#8593;</p>
 
-  <p *ngIf="arrow == false" style="color:red">&#8595;</p>
-  <p *ngIf="arrow == true" style="color:green">&#8593;</p>
-
-  <button type="button" (click)="deleteSymbol(); deleteInfo()">X</button>
+  <button type="button" (click)="deleteSymbol(); deleteInfo()" id="remove{{ticker}}">X</button>
 
   <!--<button>
     <a routerLink="/sentiment/{{ ticker }} + name ">Go </a>
@@ -20,21 +19,12 @@
   <button
     routerLink="/sentiment/{{ ticker }}"
     [queryParams]="{ ticker: ticker, name: name }"
+    id="sentiment{{ticker}}"
   >
     Go to social sentiment details
   </button>
 
-
-<button
-    routerLink="/sentiment/{{ ticker }}"
-    [queryParams]="{ ticker: ticker, name: name }"
-  >
-    Go to social sentiment details
-  </button>
-
-
- <!-- { state: { orderId: 1234 } }-->
-
+  <!-- { state: { orderId: 1234 } }-->
 
   <!--<button routerLink="['/sentiment/', ticker]" ->XXX</button>
 

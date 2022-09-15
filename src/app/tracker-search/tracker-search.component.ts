@@ -27,26 +27,40 @@ export class TrackerSearchComponent implements OnInit {
   currentPrice: number;
   percentChange: number;
   quote: any;
+  stocks: string[] = [];
 
   alive: boolean = true;
 
   stockInfo = [];
 
   ngOnInit() {
-    //this.showQuote();
-    //console.log('hello');
-    //localStorage.clear();
 
-    for (var i = 0; i < localStorage.length; i++) {
-     // if (localStorage.key(i).length < 7) {
-        //this.stocks.unshift(localStorage.key(i));
-        
+
+
+    this.quoteInfo = [];
+    this.companies = [];
+    this.stocks = [];
+
+
+    console.log("Load screen");
+    console.log(this.stocks);
+    console.log(this.companies);
+    console.log(this.quoteInfo);
+
+    for (var i = localStorage.length + 1; i >= 0; i--) {
         this.findSymbol(localStorage.key(i));
-     // }
     }
+
+    this.noSymbol = '';
+
+    console.log("Local Storage Read");
+    console.log(this.stocks);
+    console.log(this.companies);
+    console.log(this.quoteInfo);
+
   }
 
-  stocks: string[] = [];
+ 
 
   stockSearchFunc(stock: string) {
     // if it is in the api
@@ -56,16 +70,20 @@ export class TrackerSearchComponent implements OnInit {
     // push it to the array
 
     const found = this.stocks.find((obj) => {
-      return obj == stock;
+      return obj == stock.toUpperCase();
     });
 
     if (found !== undefined) {
-      console.log('Stock not found');
+      this.noSymbol = 'STOCK ALREADY SEARCHED';
     } else {
-      this.findSymbol(stock);
+      this.noSymbol = "";
+      this.findSymbol(stock.toUpperCase());
     }
 
-
+    console.log("Stock Search");
+    console.log(this.stocks);
+    console.log(this.companies);
+    console.log(this.quoteInfo);
 
   }
 
@@ -82,7 +100,7 @@ export class TrackerSearchComponent implements OnInit {
 
   displayStocks(stock: string) {
     this.clear();
-    this.showQuote(stock);
+    //this.showQuote(stock);
   }
 
   clear() {
@@ -98,11 +116,10 @@ export class TrackerSearchComponent implements OnInit {
     this.quote = null;
   }
 
-  showQuote(symbol: string) {
+ /* showQuote(symbol: string) {
     this.quote = null;
     this.stockSearch
       .getQuote(this.symbol)
-      //.pipe(takeWhile(() => this.alive))
       .subscribe({
         next: (data: String) => {
           this.currentQuote['quote'] = data;
@@ -113,18 +130,15 @@ export class TrackerSearchComponent implements OnInit {
           this.openingPrice = this.quote['o'];
           this.highPrice = this.quote['h'];
 
-          this.quoteInfo.unshift(this.currentQuote['quote']);
+          //this.quoteInfo.unshift(this.currentQuote['quote']);
 
-          console.log(this.quoteInfo);
-          console.log(this.quote['c']);
         },
         error: (err) => console.log('Error Happened quote'),
       });
-  }
+  }*/
 
   findSymbol(stock: string) {
-    //   this.company = {};
-    //  this.symbol = '';
+
     this.stockSearch
       .findSymbol(stock)
       //.pipe(takeWhile(() => this.alive))
@@ -133,19 +147,25 @@ export class TrackerSearchComponent implements OnInit {
           this.company = data;
           this.symbol = this.company['ticker'];
 
-          console.log(this.symbol);
-          console.log(this.company);
+
 
           // only do this if it is not empty
           if (this.symbol !== undefined) {
             this.companies.unshift(this.company);
-            this.stocks.unshift(stock);
-            this.showQuote(this.symbol);
+            this.stocks.unshift(this.symbol);
+           // this.showQuote(this.symbol);
             this.noSymbol = '';
 
+
             localStorage.setItem(stock, stock);
-            console.log('localStorage');
-            console.log(localStorage.getItem(stock));
+
+
+            console.log("Find Symbol");
+            console.log(this.stocks);
+            console.log(this.companies);
+            console.log(this.quoteInfo);
+
+
           } else {
             this.noSymbol = 'PLEASE ENTER CORRECT STOCK SYMBOL';
           }
@@ -158,25 +178,48 @@ export class TrackerSearchComponent implements OnInit {
 
   deleteSymbol(removeSymbol: string) {
     // remove symbol from list
-    console.log(removeSymbol['ticker']);
 
-    localStorage.removeItem(removeSymbol['ticker'].toLowerCase());
+    console.log("Remove item before");
+    console.log(this.stocks);
+    console.log(this.companies);
+    console.log(this.quoteInfo);
+
+
+    localStorage.removeItem(removeSymbol['ticker'].toUpperCase());
 
     for (var x = 0; x < this.companies.length; x++) {
       if (this.companies[x] == removeSymbol) {
         this.companies.splice(x, 1);
         this.stocks.splice(x, 1);
+        this.quoteInfo.splice(x, 1);
 
         // delete in storage as well
       }
     }
+
+   // for (var x = 0; x < this.stocks.length; x++) {
+  //    if (this.stocks[x] == removeSymbol) {
+        //this.companies.splice(x, 1);
+    //    this.stocks.splice(x, 1);
+
+        // delete in storage as well
+   //   }
+   // }
+
+
+   console.log("Remove item after");
+   console.log(this.stocks);
+   console.log(this.companies);
+   console.log(this.quoteInfo);
+
+
   }
 
   deleteSymbolInfo(removeSymbolInfo: string) {
     // remove symbol info from list
     for (var x = 0; x < this.quoteInfo.length; x++) {
       if (this.quoteInfo[x] == removeSymbolInfo) {
-        this.quoteInfo.splice(x, 1);
+        
       }
     }
   }

@@ -2,27 +2,33 @@
 
 <p>{{ name }} ({{ ticker }})</p>
 
+<div
+  *ngFor="let last of lastThree; let i = index"
+  [attr.data-index]="i"
+  style="background-color: lightgray"
+>
+  <p *ngIf="last['month'] == 1">JANUARY</p>
+  <p *ngIf="last['month'] == 2">FEBRUARY</p>
+  <p *ngIf="last['month'] == 3">MARCH</p>
+  <p *ngIf="last['month'] == 4">APRIL</p>
+  <p *ngIf="last['month'] == 5">MAY</p>
+  <p *ngIf="last['month'] == 6">JUNE</p>
+  <p *ngIf="last['month'] == 7">JULY</p>
+  <p *ngIf="last['month'] == 8">AUGUST</p>
+  <p *ngIf="last['month'] == 9">SEPTEMBER</p>
+  <p *ngIf="last['month'] == 10">OCTOBER</p>
+  <p *ngIf="last['month'] == 11">NOVEMBER</p>
+  <p *ngIf="last['month'] == 12">DECEMBER</p>
 
-  <div *ngFor="let last of lastThree; let i = index" [attr.data-index]="i" style="background-color: lightgray"> 
-    <p *ngIf="last['month'] == 1">JANUARY</p>
-    <p *ngIf="last['month'] == 2">FEBRUARY</p>
-    <p *ngIf="last['month'] == 3">MARCH</p>
-    <p *ngIf="last['month'] == 4">APRIL</p>
-    <p *ngIf="last['month'] == 5">MAY</p>
-    <p *ngIf="last['month'] == 6">JUNE</p>
-    <p *ngIf="last['month'] == 7">JULY</p>
-    <p *ngIf="last['month'] == 8">AUGUST</p>
-    <p *ngIf="last['month'] == 9">SEPTEMBER</p>
-    <p *ngIf="last['month'] == 10">OCTOBER</p>
-    <p *ngIf="last['month'] == 11">NOVEMBER</p>
-    <p *ngIf="last['month'] == 12">DECEMBER</p>
+  <p>Change: {{ last['change'] }}</p>
+  <p>MSPR: {{ last['mspr'] }}</p>
 
-    <p>Change: {{ last['change'] }}</p>
-    <p>MSPR: {{ last['mspr'] }}</p>
-      
-    <p *ngIf="last['change'] < 0" style="color:red">&#8595;</p>
-    <p *ngIf="last['change'] >= true" style="color:green">&#8593;</p>
-  </div>
+  <p *ngIf="last['change'] < 0" style="color:red">&#8595;</p>
+  <p *ngIf="last['change'] >= true" style="color:green">&#8593;</p>
+</div>
 
+<!--<div *ngIf="sentiment == false">
+  <p>THERE IS NO SENTIMENT DATA AT THIS MOMENT FOR THIS COMPANY.</p>
+  </div>-->
 
 <button routerLink="">Back to list of stocks</button>

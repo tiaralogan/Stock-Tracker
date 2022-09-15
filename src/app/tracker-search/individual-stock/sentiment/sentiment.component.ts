@@ -17,6 +17,7 @@ export class SentimentComponent implements OnInit {
   name: string;
   information: any = [];
   lastThree: any = [];
+  sentiment: boolean = false;
   
   constructor(    private route: ActivatedRoute, private stockSearch: StockSearchService, private location: Location ) {
 
@@ -39,7 +40,8 @@ export class SentimentComponent implements OnInit {
     //console.log(this.information);
 
  
-
+    
+  
 
   }
 
@@ -64,6 +66,13 @@ export class SentimentComponent implements OnInit {
           console.log(err);
         },
       });
+
+
+
+  
+  
+   
+
   }
 
 
@@ -72,20 +81,29 @@ export class SentimentComponent implements OnInit {
   getLastThree () {
 
 
+
+
+
     for (var x = 1; x < 4; x++) {
 
 
-     
+      
 
 
       this.lastThree.unshift(this.information['data'][this.information['data'].length - x]);
 
-   // console.log(this.information['data'][this.information['data'].length - x]);
-
-  // console.log("vewhrytrytdytdrt");
-//console.log(this.lastThree);
+ 
+   
 
   }
+
+
+
+
+
+
+
+
   }
 
 
