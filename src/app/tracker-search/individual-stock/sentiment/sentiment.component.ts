@@ -52,7 +52,6 @@ export class SentimentComponent implements OnInit {
     for (var x = 1; x < 4; x++) {
       this.lastThree.unshift(this.information['data'][this.information['data'].length - x]) as unknown as LastThreeInfo; 
     }
-    console.log(this.lastThree);
   }
 
 
