@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { StockSearchService } from '../../stock-search.service';
+import { CompanyInfo } from '../tracker-search.component';
 
 @Component({
   selector: 'app-individual-stock',
@@ -16,7 +17,7 @@ import { StockSearchService } from '../../stock-search.service';
   styleUrls: ['./individual-stock.component.css'],
 })
 export class IndividualStockComponent implements OnInit {
-  @Input() companies: any;
+  @Input() companies = {};
 
   @Output() removeSymbol = new EventEmitter<string>();
   @Output() removeSymbolInfo = new EventEmitter<string>();
@@ -33,7 +34,7 @@ export class IndividualStockComponent implements OnInit {
 
   // Send the information to send back to tracker search component that needs to be deleted
   deleteSymbol() {
-    this.removeSymbol.emit(this.companies);
+    this.removeSymbol.emit(this.companies as string);
   }
 
   ngOnInit() {
