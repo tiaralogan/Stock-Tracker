@@ -9,7 +9,5 @@ import { StockSearchService } from './stock-search.service';
 export class AppComponent {
   name = 'Angular ' + VERSION.major;
 
-  ngOnInit() {
-    localStorage.clear();
-  }
+  ngOnInit() {}
 }
