@@ -59,8 +59,6 @@ export class IndividualStockComponent implements OnInit {
         this.percentChange = this.quote['dp'];
         this.openingPrice = this.quote['o'];
         this.highPrice = this.quote['h'];
-
-        console.log(this.quote);
       },
       error: (err) => console.log('Error Happened quote'),
     });
