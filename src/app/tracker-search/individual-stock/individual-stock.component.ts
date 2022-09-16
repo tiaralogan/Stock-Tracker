@@ -1,3 +1,4 @@
+import { ArrayType } from '@angular/compiler';
 import {
   Component,
   OnInit,
@@ -14,15 +15,13 @@ import { StockSearchService } from '../../stock-search.service';
   templateUrl: './individual-stock.component.html',
   styleUrls: ['./individual-stock.component.css'],
 })
-
 export class IndividualStockComponent implements OnInit {
-
   @Input() companies: any;
 
   @Output() removeSymbol = new EventEmitter<string>();
   @Output() removeSymbolInfo = new EventEmitter<string>();
 
-  quote: any;
+  quote = {};
   name: string;
   ticker: string;
   highPrice: number;
@@ -30,7 +29,7 @@ export class IndividualStockComponent implements OnInit {
   currentPrice: number;
   percentChange: number;
 
-  constructor(private stockSearch: StockSearchService,) {}
+  constructor(private stockSearch: StockSearchService) {}
 
   // Send the information to send back to tracker search component that needs to be deleted
   deleteSymbol() {
@@ -53,18 +52,17 @@ export class IndividualStockComponent implements OnInit {
   // Call the function that does the api call
   // Gets the data from the api call
   showQuote(symbol: string) {
-    this.stockSearch
-      .getQuote(symbol)
-      .subscribe({
-        next: (data: String) => {
-          this.quote = data;
-          this.currentPrice = this.quote['c'];
-          this.percentChange = this.quote['dp'];
-          this.openingPrice = this.quote['o'];
-          this.highPrice = this.quote['h'];
-        },
-        error: (err) => console.log('Error Happened quote'),
-      });
-  }
+    this.stockSearch.getQuote(symbol).subscribe({
+      next: (data: String) => {
+        this.quote = data;
+        this.currentPrice = this.quote['c'];
+        this.percentChange = this.quote['dp'];
+        this.openingPrice = this.quote['o'];
+        this.highPrice = this.quote['h'];
 
+        console.log(this.quote);
+      },
+      error: (err) => console.log('Error Happened quote'),
+    });
+  }
 }

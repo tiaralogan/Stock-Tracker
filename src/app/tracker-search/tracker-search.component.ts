@@ -6,24 +6,23 @@ import { StockSearchService } from '../stock-search.service';
   templateUrl: './tracker-search.component.html',
   styleUrls: ['./tracker-search.component.css'],
 })
-
 export class TrackerSearchComponent implements OnInit {
   constructor(private stockSearch: StockSearchService) {}
 
   company = {};
-  symbol: any = '';
+  symbol: string = '';
   noSymbol: string = '';
-  companies: any = [];
+  companies: Array<CompanyInfo> = [];
   stocks: string[] = [];
 
   ngOnInit() {
-    // Clear any information that is currently in these 
+    // Clear any information that is currently in these
     this.companies = [];
     this.stocks = [];
 
     // Reads in information from local storage and searches to see if stock exists
     for (var i = localStorage.length + 1; i >= 0; i--) {
-        this.findSymbol(localStorage.key(i));
+      this.findSymbol(localStorage.key(i));
     }
 
     // Clears any messages when the page is created
@@ -47,11 +46,11 @@ export class TrackerSearchComponent implements OnInit {
     if (found !== undefined) {
       this.noSymbol = 'STOCK ALREADY SEARCHED';
     } else {
-      this.noSymbol = "";
+      this.noSymbol = '';
       this.findSymbol(stock.toUpperCase());
       if (this.symbol == undefined) {
         this.noSymbol = 'PLEASE ENTER CORRECT STOCK SYMBOL';
-      } 
+      }
     }
   }
 
@@ -68,36 +67,49 @@ export class TrackerSearchComponent implements OnInit {
   // Gets the data from the api call
   // Push the information retrieved into variables and local storage if found in api
   findSymbol(stock: string) {
-    this.stockSearch
-      .findSymbol(stock)
-      .subscribe({
-        next: (data: String) => {
-          this.company = data;
-          this.symbol = this.company['ticker'];
-          if (this.symbol !== undefined) {
-            this.companies.unshift(this.company);
-            this.stocks.unshift(this.symbol);
-            this.noSymbol = '';
-            localStorage.setItem(stock, stock);
-          } 
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    this.stockSearch.findSymbol(stock).subscribe({
+      next: (data: String) => {
+        this.company = data;
+        this.symbol = this.company['ticker'];
+        if (this.symbol !== undefined) {
+          this.companies.unshift(this.company as CompanyInfo);
+          this.stocks.unshift(this.symbol);
+          this.noSymbol = '';
+          localStorage.setItem(stock, stock);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
-  // Delete the stock from the stocks list 
+  // Delete the stock from the stocks list
   // Remove the information from the stock company list
   // Also remove the stock from the local storage
   deleteSymbol(removeSymbol: string) {
     localStorage.removeItem(removeSymbol['ticker'].toUpperCase());
     for (var x = 0; x < this.companies.length; x++) {
-      if (this.companies[x] == removeSymbol) {
+      if (this.companies[x] == (removeSymbol as unknown as CompanyInfo)) {
         this.companies.splice(x, 1);
         this.stocks.splice(x, 1);
       }
     }
   }
+}
 
+export interface CompanyInfo {
+  country: string;
+  currency: string;
+  exchange: string;
+  finnhubIndustry: string;
+  ipo: string;
+  logo: string;
+  marketCapitalization: number;
+  name: string;
+  phone: string;
+  shareOutstanding: number;
+  ticker: string;
+  weburl: string;
+  __proto__: Object;
 }

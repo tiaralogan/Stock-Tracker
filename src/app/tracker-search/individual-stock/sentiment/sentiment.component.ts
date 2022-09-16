@@ -12,8 +12,8 @@ export class SentimentComponent implements OnInit {
 
   ticker: string;
   name: string;
-  information: any = [];
-  lastThree: any = [];
+  information = {} ;
+  lastThree: Array<LastThreeInfo> = [];
   sentiment: boolean = false;
   
   constructor(private route: ActivatedRoute, private stockSearch: StockSearchService, private location: Location ) {}
@@ -50,9 +50,20 @@ export class SentimentComponent implements OnInit {
   // Get only the last three peices of data, the three most recent months, if any
   getLastThree () {
     for (var x = 1; x < 4; x++) {
-      this.lastThree.unshift(this.information['data'][this.information['data'].length - x]); 
+      this.lastThree.unshift(this.information['data'][this.information['data'].length - x]) as unknown as LastThreeInfo; 
     }
+    console.log(this.lastThree);
   }
 
 
+}
+
+
+export interface LastThreeInfo {
+  change: number;
+  month: number;
+  mspr: number;
+  symbol: string;
+  year: number;
+  __proto__: Object
 }
